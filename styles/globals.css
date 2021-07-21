@@ -1,0 +1,39 @@
+body {
+  height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#__next {
+  height: 100%;
+}
+
+.menu {
+  position: fixed;
+  top: 0.5em;
+  left: 0.5em;
+  bottom: 0.5em;
+  width: 300px;
+  border-radius: 1em;
+  box-sizing: initial;
+  border-left: 0.5em solid rgba(220, 38, 38);
+  background: rgba(220, 38, 38);
+  transition: width 0.2s;
+}
+
+.menu ul {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-left: 0.4em;
+  padding-top: 2em;
+}
+
+.menu ul li {
+  position: relative;
+  list-style: none;
+  width: 100%;
+}
