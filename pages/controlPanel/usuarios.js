@@ -1,4 +1,5 @@
 import React from 'react';
+import TablaUsuarios from '../../components/backend/usuarios/TablaUsuarios';
 import HeadApp from '../../components/Head';
 import Menu from '../../components/menu/Menu';
 
@@ -8,7 +9,7 @@ const usuarios = () => {
       <HeadApp/>
       <Menu/>
       <div className="borde ml-24 ">
-        <p>cosa</p>
+        <TablaUsuarios/>
       </div>
     </>
   )
