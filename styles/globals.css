@@ -11,9 +11,11 @@ body {
 }
 
 .menu {
-  position: fixed;
+  height: 98vh;
+  position: relative;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   align-items: left;
   top: 0.5em;
   left: 0.5em;

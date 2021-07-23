@@ -5,13 +5,11 @@ import Menu from '../../components/menu/Menu';
 
 const usuarios = () => {
   return(
-    <>
+    <div className="flex">
       <HeadApp/>
       <Menu/>
-      <div className="borde ml-24 ">
-        <TablaUsuarios/>
-      </div>
-    </>
+      <TablaUsuarios/>
+    </div>
   )
 }
 

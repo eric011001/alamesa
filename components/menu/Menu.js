@@ -1,8 +1,39 @@
 import React, { useState } from 'react';
 import MenuItem from './MenuItem';
-
+import { gql, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
+import client from '../../config/apollo';
+const OBTENER_MI_USUARIO = gql`
+  query Query {
+    obtenerMiUsuario {
+      nombre
+      apellidos
+      email
+      id
+      rol
+      status
+    }
+  }
+`;
 const Menu = () => {
+  const router = useRouter();
   const [expandido, setExpandido] = useState(false);
+  const {data,loading,error} = useQuery(OBTENER_MI_USUARIO);
+
+  if(!loading){
+    console.log(data);
+    const {obtenerMiUsuario} = data;
+    if(!obtenerMiUsuario.nombre || obtenerMiUsuario.status === "INACTIVO"){
+      if(!obtenerMiUsuario.nombre){
+        console.log("se culmplio el primero");
+      }
+      if(obtenerMiUsuario.status === "INACTIVO"){
+        console.log("se cumlio el segundo");
+      }
+      router.push("/controlPanel");
+      client.resetStore();
+    }
+  }
 
   const toggle = () => {
     const estado = expandido;
@@ -11,7 +42,7 @@ const Menu = () => {
   }
   
   return (
-    <div className="menu" style={{width: expandido ? '18em' : '4.5em'}}>
+    <div className="menu shadow-lg" style={{width: expandido ? '18em' : '4.5em'}}>
       <button className="toggle-button" onClick={() => toggle()}>
         <ion-icon name={!expandido ? 'menu-outline' : 'close-outline'}></ion-icon>
       </button>
