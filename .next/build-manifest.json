@@ -24,15 +24,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/controlPanel/nuevoUsuario": [
+    "/controlPanel/categorias": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/controlPanel/nuevoUsuario.js"
+      "static/chunks/pages/controlPanel/categorias.js"
     ],
-    "/controlPanel/usuarios": [
+    "/controlPanel/mesas": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/controlPanel/usuarios.js"
+      "static/chunks/pages/controlPanel/mesas.js"
     ]
   },
   "ampFirstPages": []

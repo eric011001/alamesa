@@ -49,8 +49,8 @@ const Menu = () => {
       <ul>
         <MenuItem titulo="Inicio" icono="home-outline" link="home"/>
         <MenuItem titulo="Pedidos" icono="copy-outline" link="homse"/>
-        <MenuItem titulo="Platillos" icono="fast-food-outline" link="hosame"/>
-        <MenuItem titulo="Mesas" icono="restaurant-outline" link="homsae"/>
+        <MenuItem titulo="Platillos" icono="fast-food-outline" link="platillos"/>
+        <MenuItem titulo="Mesas" icono="restaurant-outline" link="mesas"/>
         <MenuItem titulo="Usuarios" icono="person-outline" link="usuarios"/>
       </ul>
     </div>
