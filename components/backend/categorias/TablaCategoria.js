@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery,gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import Categoria from './Categoria';
-
+import { DragDropContext,Droppable,Draggable } from 'react-beautiful-dnd';
 const OBTENER_CATEGORIAS = gql`
     query Query {
         obtenerCategorias {
@@ -32,45 +32,63 @@ const TablaCategorias = () => {
         console.log("voy a agregar una categoria");
     }
     return (
-        <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
-          <div className="h-16 flex justify-left items-center">
-            <h1 className="ml-4 text-2xl font-bold text-red-500">Lista de categorias</h1>
-          </div>
-          <div className="flex-grow m-8 h-16 overflow-y-auto rounded-xl">
-            <table className="table-auto w-full overflow-y-auto">
-              <thead>
-                <tr className="bg-red-500">
-                  <th className="text-white px-4 py-2">Nombre</th>
-                  <th className="text-white px-4 py-2">Acciones</th>
+        <DragDropContext onDragEnd={(result) => console.log(result)}>
+            <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
+                <div className="h-16 flex justify-left items-center">
+                    <h1 className="ml-4 text-2xl font-bold text-red-500">Lista de categorias</h1>
+                </div>
+                <div className="flex-grow m-8 h-16 overflow-y-auto rounded-xl">
+                    <Droppable droppableId="categorias">
+                    {(droppableProvided,snapshot) => (
+                        <table className="table-auto w-full overflow-y-auto">
+                            <thead>
+                                <tr className="bg-red-500">
+                                <th className="text-white px-4 py-2">Nombre</th>
+                                <th className="text-white px-4 py-2">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-gray-100" >
+                                {obtenerCategorias.map((categoria,index) => (
+                                    <Draggable key ={categoria.id} draggableId={categoria.id} index={index}>
+                                        {(dragabbleProvided) => {
+                                            console.log(dragabbleProvided);
+                                            return(
+                                            <Categoria
+                                                categoria = {categoria}
+                                                {...dragabbleProvided.draggableProps}
+                                                ref= {dragabbleProvided.innerRef}
+                                                {...dragabbleProvided.dragHandleProps}
+                                            />
+                                        )}}
+                                    </Draggable>
+                                ))}
+                                {droppableProvided.placeholder}
+                            </tbody>
+                        </table>
+                    )}
+                    </Droppable>
+                    <button onClick={() => agregarUsuario()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600" style={{bottom: '3em', right: '3em'}}>
+                        <ion-icon name="person-add-outline" style={{fontSize: '1.5em'}}></ion-icon>
+                    </button>
+                </div>
+            {/* <table>
+            <thead>
+                <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>rol</th>
+                <th>Activo</th>
+                <th>Acciones</th>
                 </tr>
-              </thead>
-              <tbody className="bg-gray-100">
-                {obtenerCategorias.map(categoria => (
-                  <Categoria key ={categoria.id} categoria = {categoria}/>
+            </thead>
+            <tbody>
+                {obtenerUsuarios.map(usuario => (
+                <Usuario key={usuario.id} usuario={usuario} />
                 ))}
-              </tbody>
-            </table>
-            <button onClick={() => agregarUsuario()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600" style={{bottom: '3em', right: '3em'}}>
-              <ion-icon name="person-add-outline" style={{fontSize: '1.5em'}}></ion-icon>
-            </button>
-          </div>
-        {/* <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>rol</th>
-              <th>Activo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {obtenerUsuarios.map(usuario => (
-              <Usuario key={usuario.id} usuario={usuario} />
-            ))}
-          </tbody>
-        </table> */}
-        </div>
+            </tbody>
+            </table> */}
+            </div>
+        </DragDropContext>
     )
 
 }

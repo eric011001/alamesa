@@ -77,7 +77,10 @@ const Usuario = ({ usuario }) => {
       <td className="px-4 py-2 text-center cursor-default">{email}</td>
       <td className="px-4 py-2 text-center cursor-default">{rol}</td>
       <td className="px-4 py-2 text-center cursor-default">{status}</td>
-      <td className="px-4 py-2 text-center cursor-default">cosas</td>
+      <td className="px-4 py-2 text-center cursor-default">
+        <button onClick={() => editaUsuario()}>editar</button>
+        <button onClick={() => eliminaElUsuario()}>Elminar</button>
+      </td>
     </tr>
   )
 }

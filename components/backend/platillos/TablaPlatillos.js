@@ -37,7 +37,7 @@ const TablaPlatillos = () => {
     return (
         <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
             <div className="h-16 flex justify-left items-center">
-                <h1 className="ml-4 text-2xl font-bold text-red-500">Lista de usuarios</h1>
+                <h1 className="ml-4 text-2xl font-bold text-red-500">Lista de platillos</h1>
             </div>
             <div className="flex-grow m-8 h-16 overflow-y-auto rounded-xl">
                 <table className="table-auto w-full overflow-y-auto">

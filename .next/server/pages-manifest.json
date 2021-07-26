@@ -2,6 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/controlPanel/mesas": "pages/controlPanel/mesas.js",
-  "/controlPanel/categorias": "pages/controlPanel/categorias.js"
+  "/controlPanel/mesas": "pages/controlPanel/mesas.js"
 }

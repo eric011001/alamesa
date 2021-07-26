@@ -37,9 +37,9 @@ const Mesa = ({mesa}) => {
         console.log("voy a editar la mesa");
     }
 
-    const eliminaElUsuario = () => {
+    const eliminaLaMesa = () => {
         Swal.fire({
-          title: '¿Deseas elimiar a este Usuario?',
+          title: '¿Deseas elimiar a esta Mesa?',
           text: 'Esta acción no se peude deshacer',
           icon: 'warning',
           showCancelButton: true,
@@ -66,7 +66,10 @@ const Mesa = ({mesa}) => {
       return (
         <tr className="hover:bg-white cursor-default transition-all">
           <td className="px-4 py-2 text-center cursor-default">{nombre}</td>
-          <td className="px-4 py-2 text-center cursor-default">cosas</td>
+          <td className="px-4 py-2 text-center cursor-default">
+            <button onClick={() => editaMesa()}>editar</button>
+            <button onClick={() => eliminaLaMesa()}>Elminar</button>
+          </td>
         </tr>
       )
 }
