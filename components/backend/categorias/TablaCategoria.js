@@ -28,6 +28,14 @@ const TablaCategorias = () => {
     }
     const {obtenerCategorias} = data;
 
+    /*
+    <Categoria
+                                                categoria = {categoria}
+                                                draggableProps = {dragabbleProvided.draggableProps}
+                                                dragHandleProps = {dragabbleProvided.dragHandleProps}
+                                                referencia = {dragabbleProvided.innerRef}
+                                            /> */
+
     const agregarCategoria = () => {
         console.log("voy a agregar una categoria");
     }
@@ -50,16 +58,12 @@ const TablaCategorias = () => {
                             <tbody className="bg-gray-100" >
                                 {obtenerCategorias.map((categoria,index) => (
                                     <Draggable key ={categoria.id} draggableId={categoria.id} index={index}>
-                                        {(dragabbleProvided) => {
-                                            console.log(dragabbleProvided);
-                                            return(
-                                            <Categoria
-                                                categoria = {categoria}
-                                                {...dragabbleProvided.draggableProps}
-                                                ref= {dragabbleProvided.innerRef}
-                                                {...dragabbleProvided.dragHandleProps}
-                                            />
-                                        )}}
+                                        {(dragabbleProvided) => (
+                                                <tr className="hover:bg-white cursor-default transition-all" {...dragabbleProvided.draggableProps} {...dragabbleProvided.dragHandleProps} ref={dragabbleProvided.innerRef}>
+                                                    <td className="px-4 py-2 text-center cursor-default">{categoria.nombre}</td>
+                                                    <td className="px-4 py-2 text-center cursor-default">cosas</td>
+                                                </tr>
+                                        )}
                                     </Draggable>
                                 ))}
                                 {droppableProvided.placeholder}

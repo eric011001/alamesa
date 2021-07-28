@@ -36,7 +36,7 @@ const TablaMesas = () => {
           }
     });
 
-    if(loading){
+    if (loading) {
         return(
             <div className="ml-6 mt-3 flex flex-grow items-center justify-center">
                 <svg className="animate-spin -ml-1 mr-3 h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ const TablaMesas = () => {
     const agregarMesa = () => {
         Swal.fire({
             title: 'Registrar nueva mesa',
-            html: `<input type="text" id="name" class="p-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none rounded-xl transition-all" placeholder="Nombre de la mesa">`,
+            html: `<span style="margin: 1em; display: block; color: #dc2626; font-size: 2em"><ion-icon name="restaurant-outline"></ion-icon></span><input type="text" id="name" class="p-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none rounded-xl transition-all" placeholder="Nombre de la mesa">`,
             confirmButtonText: 'Agregar',
             confirmButtonColor: '#ef4444',
             focusConfirm: false,

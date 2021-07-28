@@ -21,7 +21,6 @@ const Menu = () => {
   const {data,loading,error} = useQuery(OBTENER_MI_USUARIO);
 
   if(!loading){
-    console.log(data);
     const {obtenerMiUsuario} = data;
     if(!obtenerMiUsuario.nombre || obtenerMiUsuario.status === "INACTIVO"){
       if(!obtenerMiUsuario.nombre){

@@ -15,6 +15,10 @@ const NUEVO_USUARIO = gql`
             nombre
             id
             email
+            apellidos
+            rol
+            status
+            __typename
         }
     }
 `;
@@ -34,7 +38,7 @@ const OBTENER_USUARIOS = gql`
 
 const rolOptions = [
   { value: 'ADMINISTRADOR', label: 'Administrador' },
-  { value: 'USUARIO', lable: 'Usuario' }
+  { value: 'USUARIO', label: 'Usuario' }
 ];
 
 const statusOptions = [
@@ -50,13 +54,12 @@ const nuevoUsuario = () => {
 
 
   const [CrearNuevoUsuarioMutation] = useMutation(NUEVO_USUARIO, {
-    update(cache, { data: { nuevoUsuario } }) {
+    update(cache, { data: { crearNuevoUsuario } }) {
       const { obtenerUsuarios } = cache.readQuery({ query: OBTENER_USUARIOS });
-
       cache.writeQuery({
         query: OBTENER_USUARIOS,
         data: {
-          obtenerUsuarios: [...obtenerUsuarios, nuevoUsuario]
+          obtenerUsuarios: [...obtenerUsuarios, crearNuevoUsuario]
         }
       })
     }
@@ -71,14 +74,14 @@ const nuevoUsuario = () => {
       rolInput: '',
       statusInput: '',
     },
-    validationSchema: {
+    validationSchema: Yup.object({
       nombreInput: Yup.string().required("El nombre es necesario"),
-      apellidosInput: Yup.string().required("EL apellido es necesario"),
-      emailInput: Yup.string().required("El email es necesario").email("El correo no es valido"),
+      apellidosInput: Yup.string().required("El apellido es necesario"),
+      emailInput: Yup.string().required("El correo es necesario").email("El correo no es valido"),
       passwordInput: Yup.string().required("La contraseña es necesaria"),
       rolInput: Yup.string().required("El rol es necesario"),
       statusInput: Yup.string().required("El estado es necesario")
-    },
+    }),
     onSubmit: async valores => {
       console.log(valores);
       const { nombreInput, apellidosInput, emailInput, passwordInput, rolInput, statusInput } = valores;
@@ -94,14 +97,16 @@ const nuevoUsuario = () => {
               status: statusInput
             }
           }
-        })
+        });
         Swal.fire(
           'Creado',
           'Se creó el usuario exitosamente',
           'success'
         );
+        router.push('/controlPanel/usuarios')
 
       } catch (error) {
+        console.log(error);
         guardarMensaje(error.message.replace('GraphQL error: ', ''));
         setTimeout(() => {
           guardarMensaje(null);
@@ -148,6 +153,7 @@ const nuevoUsuario = () => {
     <div className="flex">
       <HeadApp />
       <Menu />
+      <form onSubmit={formikUsuario.handleSubmit} className="flex w-full">
       <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
         <div className="h-16 flex justify-left items-center">
           <h1 className="ml-4 text-2xl font-bold text-red-500">Agregar usuario</h1>
@@ -157,30 +163,48 @@ const nuevoUsuario = () => {
             <div className="w-full sm:w-full md:w-full lg:w-1/3 xl:w-1/3 flex-shrink-0 flex flex-col">
               <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="nombreInput">Nombre:</label>
               <input type="text" id="nombreInput" name="nombreInput" className="p-2 m-2 w-auto h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl" onChange={formikUsuario.handleChange} onBlur={formikUsuario.handleBlur} value={formikUsuario.values.nombreInput}/>
+              {formikUsuario.touched.nombreInput && formikUsuario.errors.nombreInput ? (
+                <span className="bg-white justify-center flex text-red-500">{formikUsuario.errors.nombreInput}</span>
+              ): null}
             </div>
             <div className="w-full sm:w-full md:w-full lg:w-1/3 xl:w-1/3 flex-shrink-0 flex flex-col">
               <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="apellidosInput">Apellidos:</label>
               <input type="text" id="apellidosInput" name="apellidosInput" className="p-2 m-2 w-auto h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl" onChange={formikUsuario.handleChange} onBlur={formikUsuario.handleBlur} value={formikUsuario.values.apellidosInput}/>
+              {formikUsuario.touched.apellidosInput && formikUsuario.errors.apellidosInput ? (
+                <span className="bg-white justify-center flex text-red-500">{formikUsuario.errors.apellidosInput}</span>
+              ): null}
             </div>
             <div className="w-full sm:w-full md:w-full lg:w-1/3 xl:w-1/3 flex-shrink-0 flex flex-col">
-            <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="emailInput">Correo electrónico:</label>
+              <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="emailInput">Correo electrónico:</label>
               <input type="email" id="emailInput" name="emailInput" className="p-2 m-2 w-auto h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl" onChange={formikUsuario.handleChange} onBlur={formikUsuario.handleBlur} value={formikUsuario.values.emailInput}/>
+              {formikUsuario.touched.emailInput && formikUsuario.errors.emailInput ? (
+                <span className="bg-white justify-center flex text-red-500">{formikUsuario.errors.emailInput}</span>
+              ): null}
             </div>
           </div>
           <div className="flex flex-wrap ">
             <div className="w-full sm:w-full md:w-full lg:w-1/3 xl:w-1/3 flex-shrink-0 flex flex-col">
               <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="passwordInput">Contraseña:</label>
               <input type="password" id="passwordInput" name="passwordInput" className="p-2 m-2 w-auto h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl" onChange={formikUsuario.handleChange} onBlur={formikUsuario.handleBlur} value={formikUsuario.values.passwordInput}/>
+              {formikUsuario.touched.passwordInput && formikUsuario.errors.passwordInput ? (
+                <span className="bg-white justify-center flex text-red-500">{formikUsuario.errors.passwordInput}</span>
+              ): null}
             </div>
             <div className="w-full sm:w-full md:w-full lg:w-1/3 xl:w-1/3 flex-shrink-0 flex flex-col">
               <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="rolInput">Rol:</label>
               <Select id="rolInput" options={rolOptions} onChange={selectedOption => {
                 formikUsuario.handleChange('rolInput')(selectedOption.value); 
                 setRol(selectedOption);}} onBlur={formikUsuario.handleBlur} value={rol} className="m-2" styles={selectStyles}/>
+              {formikUsuario.touched.rolInput && formikUsuario.errors.rolInput ? (
+                <span className="bg-white justify-center flex text-red-500">{formikUsuario.errors.rolInput}</span>
+              ): null}
             </div>
             <div className="w-full sm:w-full md:w-full lg:w-1/3 xl:w-1/3 flex-shrink-0 flex flex-col">
               <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="statusInput">Status:</label>
               <Select id="statusInput" options={statusOptions} onChange={selectedOption => {formikUsuario.handleChange('statusInput')(selectedOption.value); setStatus(selectedOption);}} onBlur={formikUsuario.handleBlur} value={status} className="m-2" styles={selectStyles}/>
+              {formikUsuario.touched.statusInput && formikUsuario.errors.statusInput ? (
+                <span className="bg-white justify-center flex text-red-500">{formikUsuario.errors.statusInput}</span>
+              ): null}
             </div>
           </div>
           <div className="flex flex-wrap justify-center">
@@ -188,6 +212,7 @@ const nuevoUsuario = () => {
           </div>
         </div>
       </div>
+      </form>
     </div>
   )
 
