@@ -50,8 +50,9 @@ const TablaMesas = () => {
     const agregarMesa = () => {
         Swal.fire({
             title: 'Registrar nueva mesa',
-            html: `<input type="text" id="name" class="swal2-input" placeholder="Nombre de la mesa">`,
+            html: `<input type="text" id="name" class="p-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none rounded-xl transition-all" placeholder="Nombre de la mesa">`,
             confirmButtonText: 'Agregar',
+            confirmButtonColor: '#ef4444',
             focusConfirm: false,
             preConfirm: async () => {
               const name = Swal.getPopup().querySelector('#name').value
@@ -98,26 +99,10 @@ const TablaMesas = () => {
                     ))}
                 </tbody>
                 </table>
-                <button onClick={() => agregarMesa()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600" style={{bottom: '3em', right: '3em'}}>
-                <ion-icon name="add-circle-outline" style={{fontSize: '1.5em'}}></ion-icon>
+                <button onClick={() => agregarMesa()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600 p-4" style={{bottom: '3em', right: '3em'}}>
+                    <ion-icon name="add-circle-outline" style={{fontSize: '2em'}}></ion-icon>
                 </button>
             </div>
-        {/* <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>rol</th>
-              <th>Activo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {obtenerUsuarios.map(usuario => (
-              <Usuario key={usuario.id} usuario={usuario} />
-            ))}
-          </tbody>
-        </table> */}
         </div>
     )
 }

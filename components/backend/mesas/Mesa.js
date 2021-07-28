@@ -39,12 +39,13 @@ const Mesa = ({mesa}) => {
 
     const eliminaLaMesa = () => {
         Swal.fire({
-          title: '¿Deseas elimiar a esta Mesa?',
-          text: 'Esta acción no se peude deshacer',
+          title: '¿Deseas eliminar a esta Mesa?',
+          text: 'Esta acción no se puede deshacer',
           icon: 'warning',
+          iconColor: '#ef4444',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#6b7280',
           reverseButtons: true,
           confirmButtonText: 'Si, eliminar',
           cancelButtonText: 'No, cancelar'
@@ -67,8 +68,12 @@ const Mesa = ({mesa}) => {
         <tr className="hover:bg-white cursor-default transition-all">
           <td className="px-4 py-2 text-center cursor-default">{nombre}</td>
           <td className="px-4 py-2 text-center cursor-default">
-            <button onClick={() => editaMesa()}>editar</button>
-            <button onClick={() => eliminaLaMesa()}>Elminar</button>
+            <button onClick={() => editaMesa()} className="bg-red-500 text-white w-8 h-8 rounded-lg mx-2 text-xl p-1 outline-none">
+              <ion-icon name="pencil"></ion-icon>
+            </button>
+            <button onClick={() => eliminaLaMesa()} className="bg-red-500 text-white w-8 h-8 rounded-lg mx-2 text-xl p-1 outline-none">
+              <ion-icon name="trash"></ion-icon>
+            </button>
           </td>
         </tr>
       )

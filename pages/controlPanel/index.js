@@ -79,27 +79,27 @@ const Index = () => {
     <>
       <HeadApp/>
       <div className="h-full flex justify-center">
-        <form onSubmit= {formikLogin.handleSubmit} className="w-full mx-4 md:w-2/3 lg:w-1/2 xl:w-1/3 h-1/2 my-auto">
-          <div className="bg-white shadow-lg rounded-xl h-full">
+        <form onSubmit= {formikLogin.handleSubmit} className="w-full mx-4 md:w-2/3 lg:w-1/2 xl:w-1/3 h-1/2 my-auto h-full flex">
+          <div className="bg-white shadow-lg rounded-xl my-auto w-full">
             <div className="h-1/6 flex justify-center items-center">
               <h1 className="text-3xl font-semibold">Iniciar sesión</h1>
             </div>
             <div className="h-5/6 flex flex-col">
-              <div className="flex h-1/4 flex-col m-2">
+              <div className="flex h-1/3 flex-col m-2">
                 <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="emailInput">Correo electrónico:</label>
                 <input type="email" id="emailInput" name="emailInput" className="p-2 m-2 w-auto h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl" onChange={formikLogin.handleChange} onBlur = {formikLogin.handleBlur} value={formikLogin.values.emailInput}/>
                 {formikLogin.touched.emailInput && formikLogin.errors.emailInput ? (
                   <span className="bg-white justify-center flex text-red-500">{formikLogin.errors.emailInput}</span>
                 ): null}
               </div>
-              <div className="flex h-1/4 flex-col m-2">
+              <div className="flex h-1/3 flex-col m-2">
                 <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="passwordInput">Contraseña:</label>
                 <input type="password" id="passwordInput" name="passwordInput" className="p-2 m-2 w-auto h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl"  onChange={formikLogin.handleChange} onBlur = {formikLogin.handleBlur} value={formikLogin.values.passwordInput}/>
                 {formikLogin.touched.passwordInput && formikLogin.errors.passwordInput ? (
                   <span className="bg-white justify-center flex text-red-500">{formikLogin.errors.passwordInput}</span>
                 ): null}
               </div>
-              <div className="flex h-1/2 justify-center m-4 items-center flex-col">
+              <div className="flex h-1/3 justify-center m-4 items-center flex-col">
                 <button className="block w-full h-10 bg-red-600 transition-all hover:bg-red-700 rounded-xl text-white font-semibold" type="submit">Ingresar</button>
                 {mensaje && mostrarMensaje() }
               </div>
