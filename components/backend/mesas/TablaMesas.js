@@ -78,6 +78,7 @@ const TablaMesas = () => {
             
           })
     }
+    console.log(error);
     return (
         <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
             <div className="h-16 flex justify-left items-center">

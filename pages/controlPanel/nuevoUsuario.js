@@ -65,6 +65,7 @@ const nuevoUsuario = () => {
       nombreInput: '',
       apellidosInput: '',
       emailInput: '',
+      passwordInput: '',
       rolInput: '',
       statusInput: '',
     },
@@ -72,6 +73,7 @@ const nuevoUsuario = () => {
       nombreInput: Yup.string().required("El nombre es necesario"),
       apellidosInput: Yup.string().required("EL apellido es necesario"),
       emailInput: Yup.string().required("El email es necesario").email("El correo no es valido"),
+      passwordInput: Yup.string().required("La contraseña es necesaria"),
       rolInput: Yup.string().required("El rol es necesario"),
       statusInput: Yup.string().required("El estadio es necesario")
     },
@@ -138,8 +140,19 @@ const nuevoUsuario = () => {
         <div className="h-16 flex justify-left items-center">
           <h1 className="ml-4 text-2xl font-bold text-red-500">Agregar usuario</h1>
         </div>
-        <div className="flex-grow m-8 flex borde">
-          a
+        <div className="flex-grow m-8 flex flex-col borde">
+          <div className="flex borde flex-wrap
+          ">
+            <div class="w-full flex-shrink-0 flex-grow sm:w-full md:w-1/2 lg:w-1/3 xl:w-1/3 borde">
+              a
+            </div>
+            <div class="w-full sm:w-full flex-shrink-0 md:w-1/2 lg:w-1/3 xl:w-1/3 borde">
+              a
+            </div>
+            <div class="sm:w-full md:w-1/3 flex-shrink-0 lg:w-1/3 xl:w-1/2 borde">
+              a
+            </div>
+          </div>
         </div>
       </div>
     </div>

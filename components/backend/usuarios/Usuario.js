@@ -78,8 +78,12 @@ const Usuario = ({ usuario }) => {
       <td className="px-4 py-2 text-center cursor-default">{rol}</td>
       <td className="px-4 py-2 text-center cursor-default">{status}</td>
       <td className="px-4 py-2 text-center cursor-default">
-        <button onClick={() => editaUsuario()}>editar</button>
-        <button onClick={() => eliminaElUsuario()}>Elminar</button>
+        <button onClick={() => editaUsuario()} className="bg-red-500 text-white w-8 h-8 rounded-lg mx-2 text-xl p-1">
+          <ion-icon name="pencil"></ion-icon>
+        </button>
+        <button onClick={() => eliminaElUsuario()} className="bg-red-500 text-white w-8 h-8 rounded-lg mx-2 text-xl p-1">
+          <ion-icon name="trash"></ion-icon>
+        </button>
       </td>
     </tr>
   )
