@@ -39,7 +39,10 @@ const Usuario = ({ usuario }) => {
   });
 
   const editaUsuario = () => {
-    console.log("me voy a editar");
+    router.push({
+      pathname:"/controlPanel/editarUsuario/[id]",
+      query: {id}
+    })
   }
 
   const eliminaElUsuario = () => {
