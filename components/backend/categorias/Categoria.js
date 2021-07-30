@@ -95,12 +95,12 @@ const Categoria = ({ categoria, index }) => {
     }).then(async (result) => {
       if (result.value) {
         try {
-          const { data } = await EliminarMesaMutation({
+          const { data } = await EliminarCategoriaMutation({
             variables: {
               id
             }
           });
-          Swal.fire('Eliminado', data.EliminarMesaMutation, 'success');
+          Swal.fire('Eliminado', data.EliminarCategoriaMutation, 'success');
         } catch (error) {
           console.log(error);
         }

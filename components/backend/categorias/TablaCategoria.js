@@ -25,10 +25,22 @@ const NUEVA_CATEGORIA = gql`
   }
 `;
 
+const ACTUALIZAR_CATEGORIA = gql`
+  mutation ActualizarCategoriaMutation($id: ID!, $input: CategoriaInput) {
+    actualizarCategoria(id: $id, input: $input) {
+      id
+      nombre
+      orden
+      __typename
+    }
+  }
+`;
+
 const TablaCategorias = () => {
   const router = useRouter();
   const [categorias, setcategorias] = useState(null);
   const [ultimoOrden, setUltimoOrden] = useState(0);
+  const [ActualizarCategoriaMutation] = useMutation(ACTUALIZAR_CATEGORIA);
   const [CrearNuevaCategoriaMutation] = useMutation(NUEVA_CATEGORIA, {
     update(cache, { data: { crearNuevaCategoria } }) {
       const { obtenerCategorias } = cache.readQuery({
@@ -117,6 +129,25 @@ const TablaCategorias = () => {
     resultado.splice(endIndex, 0, eliminado);
     return resultado;
   };
+  
+  const cambiaOrden = async () => {
+    categorias.map((categoria,index) => {
+      try {
+        const {data} = ActualizarCategoriaMutation({
+          variables:{
+            id: categoria.id,
+            input: {
+              nombre: categoria.nombre,
+              orden: index+1
+            }
+          }
+        })
+        Swal.fire("Actualizado", "Nuevo orden aplicado", "success");
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  }
 
   return (
     <DragDropContext
@@ -139,7 +170,7 @@ const TablaCategorias = () => {
             Lista de categorias
           </h1>
         </div>
-        <div className="flex-grow m-8 h-16 overflow-y-auto">
+        <div className="flex-grow m-8 h-16 overflow-y-auto flex flex-col">
           <Droppable droppableId="categorias">
             {(droppableProvided, snapshot) => (
               <ul className="mt-5" {...droppableProvided.droppableProps} ref={droppableProvided.innerRef} >
@@ -156,6 +187,7 @@ const TablaCategorias = () => {
               </ul>
             )}
           </Droppable>
+          <button onClick= {() => cambiaOrden()} className="bg-red-500 text-white w-32 h-10 rounded-xl ml-auto mt-5 mr-2 font-semibold hover:bg-red-600 transition-colors">Aplicar orden</button>
           <button onClick={() => agregarCategoria()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600 p-4" style={{ bottom: "3em", right: "3em" }} >
             <ion-icon name="albums-outline" style={{ fontSize: "2em" }}></ion-icon>
           </button>
