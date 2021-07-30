@@ -18,6 +18,16 @@ const OBTENER_MESAS = gql`
     }
 `;
 
+const ACTUALIZAR_MESA = gql`
+  mutation ActualizarMesaMutation($id: ID!, $input: MesaInput!) {
+    actualizarMesa(id: $id, input: $input) {
+      id
+      nombre
+      __typename
+    }
+  }
+`;
+
 const Mesa = ({mesa}) => {
     const {nombre, id} = mesa;
     const router = useRouter();
@@ -32,9 +42,44 @@ const Mesa = ({mesa}) => {
             });
           }
     });
+    const [ActualizarMesaMutation] = useMutation(ACTUALIZAR_MESA)
 
     const editaMesa = () => {
-        console.log("voy a editar la mesa");
+      Swal.fire({
+        title: 'Registrar nueva mesa',
+        html: `<span style="margin: 1em; display: block; color: #dc2626; font-size: 2em"><ion-icon name="restaurant-outline"></ion-icon></span><input type="text" id="name" value="${nombre}" class="p-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none rounded-xl transition-all" placeholder="Nombre de la mesa">`,
+        confirmButtonText: 'Agregar',
+        confirmButtonColor: '#ef4444',
+        focusConfirm: false,
+        preConfirm: async () => {
+          const name = Swal.getPopup().querySelector('#name').value
+          if (!name ) {
+            Swal.showValidationMessage(`Porfavor de rellenar la caja de texto`)
+          }
+          try {
+            const {data} = ActualizarMesaMutation({
+              variables:{
+                id,
+                input: {
+                  nombre: name
+                }
+              }
+            })
+          } catch (error) {
+            console.log(error);
+          }
+          //return { login: login, password: password }
+        }
+      }).then((result) => {
+          if(result.isConfirmed && result.value){
+            Swal.fire(
+                'actualizado',
+                'Se actualizó la mesa Correctamente',
+                'success'
+            );
+          }
+        
+      })
     }
 
     const eliminaLaMesa = () => {
