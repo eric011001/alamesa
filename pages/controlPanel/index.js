@@ -100,7 +100,7 @@ const Index = () => {
                 ): null}
               </div>
               <div className="flex h-1/3 justify-center m-4 items-center flex-col">
-                <button className="block w-full h-10 bg-red-600 transition-all hover:bg-red-700 rounded-xl text-white font-semibold" type="submit">Ingresar</button>
+                <button className="block w-full h-10 bg-red-600 transition-all hover:bg-red-700 rounded-xl text-white font-semibold outline-none" type="submit">Ingresar</button>
                 {mensaje && mostrarMensaje() }
               </div>
             </div>
