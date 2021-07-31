@@ -32,9 +32,9 @@ const imprimirqr = () => {
     </Head>
       <Script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></Script>
       <div className="w-full">
-        <div className="grid grid-cols-3 gap-4 ">
+        <div className="grid grid-cols-2 gap-4 ">
         {obtenerMesas.map(mesa => (
-          <QRCode value={mesa.id} />
+          <QRCode size={200} value={mesa.id} />
         ))}
       </div>
       </div>

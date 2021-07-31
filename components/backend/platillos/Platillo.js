@@ -41,7 +41,10 @@ const Platillo = ({ platillo }) => {
   });
 
   const editaPlatillo = () => {
-    console.log("voy a editar un platillo");
+    router.push({
+      pathname:"/controlPanel/editarPlatillo/[id]",
+      query: {id}
+    })
   }
 
   const eliminaElPlatillo = () => {
