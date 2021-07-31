@@ -169,11 +169,28 @@ const nuevoPedido = () => {
                       <Select id="pedidoInput"
                         options={obtenerPlatillos}
                         getOptionValue={(platillo) => platillo.nombre}
-                        getOptionLabel={(platillo) => platillo.nombre}
+                        getOptionLabel={(platillo) => `${platillo.nombre}-$${platillo.precio}`}
                         isMulti={true}
                         onChange={selectedOption => {
                         setPedido(selectedOption);}} value={pedido} className="m-2" styles={selectStyles}
                       />
+                    </div>
+                    <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
+                      <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block">Resumen:</label>
+                      <div className="w-full">
+                        {pedido.map(pedidoUnico => (
+                          <p>{pedidoUnico.nombre}</p>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap w-full">
+                      <div className="w-full flex-shrink-0 flex flex-col">
+                        <label className="font-semibold mt-2 mb-2 ml-3 mr-2 block" htmlFor="comentarioInput">Comentarios:</label>
+                        <textarea className="p-2 m-2 w-auto block bg-gray-200 focus:bg-gray-300 outline-none rounded-xl transition-colors" id="comentarioInput"  onChange={formikPedido.handleChange} onBlur={formikPedido.handleBlur} value={formikPedido.values.comentarioInput} ></textarea>
+                      </div>
+                    </div>
+                    <div className="flex w-full flex-wrap justify-center">
+                      <button type="submit" className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">Agregar Pedido</button>
                     </div>
                   </div>
                   
