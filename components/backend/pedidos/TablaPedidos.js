@@ -71,20 +71,20 @@ const TablaPedidos = () => {
   if (!pendientes || cantidadPendientes.length !== pendientes.length || cantidadPreparacion.length !== preparacion.length || cantidadEnviado.length !== enviado.length) {
     let tempPendientes = []
     let tempPreparacion = []
-    let tempenviado = []
+    let tempEnviado = []
 
     obtenerPedidos.forEach(pedido => {
-      if (pedido.estado === "PENDIENTE") {
+      if (pedido.estado === 'PENDIENTE') {
         tempPendientes.push(pedido);
-      } else if (pedido.estado === "ENPREPARACION") {
-        tempPreparacion.push(pedido);
-      } else if (pedido.estado === "ENVIADO") {
-        tempenviado.push(pedido);
+      } else if (pedido.estado === 'ENPREPARACION') {
+        tempPreparacion.push(pedido)
+      } else if (pedido.estado === 'ENVIADO') {
+        tempEnviado.push(pedido);
       }
     })
     setPendientes(tempPendientes);
     setPreparacion(tempPreparacion);
-    setEnviado(tempenviado);
+    setEnviado(tempEnviado);
   }
 
   const agregarPedido = () => {
@@ -122,11 +122,12 @@ const TablaPedidos = () => {
                       total: pedidoCambiado.total
                     }
                   }
-                })
+                });
+                
               } catch (error) {
                 console.log(error);
               }
-            }else if(destination.droppableId === "enviado"){
+            } else if (destination.droppableId === "enviado") {
               try {
                 const {data} = await ActualizarPedidoMutation({
                   variables:{
@@ -143,7 +144,7 @@ const TablaPedidos = () => {
               } catch (error) {
                 console.log(error);
               }
-            }else{
+            } else {
               try {
                 const {data} = await ActualizarPedidoMutation({
                   variables:{
@@ -363,8 +364,8 @@ const TablaPedidos = () => {
           </div>
         </div>
         </DragDropContext>
-        <button onClick={() => agregarPedido()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600" style={{bottom: '3em', right: '3em'}}>
-          <ion-icon name="person-add-outline" style={{fontSize: '1.5em'}}></ion-icon>
+        <button onClick={() => agregarPedido()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600 p-3" style={{bottom: '3em', right: '3em'}}>
+          <ion-icon name="copy-outline" style={{fontSize: '1.5em'}}></ion-icon>
         </button>
       </div>
     </div>

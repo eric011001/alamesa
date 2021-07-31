@@ -35,7 +35,9 @@ const TablaMesas = () => {
             })
           }
     });
-
+    const impresion = () => {
+        router.push('/controlPanel/imprimirqr')
+    }
     if (loading) {
         return(
             <div className="ml-6 mt-3 flex flex-grow items-center justify-center">
