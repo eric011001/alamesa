@@ -98,9 +98,15 @@ const TablaMesas = () => {
                     ))}
                 </tbody>
                 </table>
-                <button onClick={() => agregarMesa()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600 p-4" style={{bottom: '3em', right: '3em'}}>
-                    <ion-icon name="add-circle-outline" style={{fontSize: '2em'}}></ion-icon>
-                </button>
+                <div className="absolute flex" style={{ bottom: '3em', right: '3em' }}>
+                    <button onClick={() => impresion()} className="mr-2 bg-red-500 text-white w-16 h-16 rounded-xl transition-colors shadow-xl hover:bg-red-600 p-4">
+                        <ion-icon name="print-outline" style={{ fontSize: '2em' }}></ion-icon>
+                    </button>
+                    <button onClick={() => agregarMesa()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-colors shadow-xl hover:bg-red-600 p-4">
+                        <ion-icon name="add-circle-outline" style={{ fontSize: '2em' }}></ion-icon>
+                    </button>
+                </div>
+                
             </div>
         </div>
     )

@@ -1,5 +1,5 @@
-import React,{useState} from 'react'
-import {useQuery, gql} from "@apollo/client";
+import React,{useState, useEffect} from 'react'
+import {useQuery, gql, useMutation} from "@apollo/client";
 import { useRouter } from "next/router";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Pedido from './Pedido';
@@ -23,11 +23,35 @@ const OBTENER_PEDIDOS = gql`
   }
 `;
 
+const ACTUALIZAR_PEDIDO = gql`
+  mutation ActualizarPedidoMutation($id: ID!, $input: PedidoInput) {
+    actualizarPedido(id: $id, input: $input) {
+      comentario
+      estado
+      id
+      mesa
+      
+    }
+  }
+`;
+
 const TablaPedidos = () => {
-  const {data,loading,error} = useQuery(OBTENER_PEDIDOS);
+  const router = useRouter();
+  const {data,loading,error,startPolling,stopPolling} = useQuery(OBTENER_PEDIDOS);
   const [pendientes, setPendientes] = useState(null);
   const [preparacion, setPreparacion] = useState(null);
   const [enviado, setEnviado] = useState(null);
+  const [ActualizarPedidoMutation] = useMutation(ACTUALIZAR_PEDIDO);
+  useEffect(
+    () => {
+      startPolling(50);
+      return () => {
+        stopPolling();
+      };
+    },
+    [startPolling, stopPolling]
+  );
+
   if (loading) {
     return (
       <div className="ml-6 mt-3 flex flex-grow items-center justify-center">
@@ -40,8 +64,11 @@ const TablaPedidos = () => {
   }
 
   const {obtenerPedidos} = data;
+  const cantidadPendientes = obtenerPedidos.filter(pedido => pedido.estado === "PENDIENTE");
+  const cantidadPreparacion = obtenerPedidos.filter(pedido => pedido.estado === "ENPREPARACION" );
+  const cantidadEnviado = obtenerPedidos.filter(pedido => pedido.estado === "ENVIADO");
 
-  if (!pendientes) {
+  if (!pendientes || cantidadPendientes.length !== pendientes.length || cantidadPreparacion.length !== preparacion.length || cantidadEnviado.length !== enviado.length) {
     let tempPendientes = []
     let tempPreparacion = []
     let tempenviado = []
@@ -49,7 +76,7 @@ const TablaPedidos = () => {
     obtenerPedidos.forEach(pedido => {
       if (pedido.estado === "PENDIENTE") {
         tempPendientes.push(pedido);
-      } else if (pedido.estado === "EN PREPARACION") {
+      } else if (pedido.estado === "ENPREPARACION") {
         tempPreparacion.push(pedido);
       } else if (pedido.estado === "ENVIADO") {
         tempenviado.push(pedido);
@@ -60,19 +87,190 @@ const TablaPedidos = () => {
     setEnviado(tempenviado);
   }
 
+  const agregarPedido = () => {
+    router.push("/controlPanel/nuevoPedido");
+  }
+
   return(
     <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
       <div className="h-16 flex justify-left items-center">
         <h1 className="ml-4 text-2xl font-bold text-red-500">Pedidos</h1>
       </div>
       <div className="flex-grow m-8 h-16 flex overflow-x-auto">{/* Pedido, Total, Estado, Comentario, Mesa y Fecha */}
-        <DragDropContext onDragEnd={result=> {
+        <DragDropContext onDragEnd={async result=> {
           const {source,destination} = result;
           if(!destination){
             return;
           }
           if (source.index === destination.index && source.droppableId === destination.droppableId) {
             return;
+          }
+          
+          if(source.droppableId === "pendientes"){
+            const pedidoCambiado = pendientes[source.index];
+            const newPedido = pedidoCambiado.pedido.map(({__typename,...pedido}) => pedido);
+            if(destination.droppableId === "preparacion"){
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "ENPREPARACION",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }else if(destination.droppableId === "enviado"){
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "ENVIADO",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }else{
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "COMPLETADO",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }else if(source.droppableId === "preparacion"){
+            const pedidoCambiado = preparacion[source.index];
+            const newPedido = pedidoCambiado.pedido.map(({__typename,...pedido}) => pedido);
+            if(destination.droppableId === "pendientes"){
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "PENDIENTE",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }else if(destination.droppableId === "enviado"){
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "ENVIADO",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }else{
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "COMPLETADO",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }else if(source.droppableId === "enviado"){
+            const pedidoCambiado = enviado[source.index];
+            const newPedido = pedidoCambiado.pedido.map(({__typename,...pedido}) => pedido);
+            if(destination.droppableId === "pendientes"){
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "PENDIENTE",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }else if(destination.droppableId === "preparacion"){
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "ENPREPARACION",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }else{
+              try {
+                const {data} = await ActualizarPedidoMutation({
+                  variables:{
+                    id: pedidoCambiado.id,
+                    input: {
+                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                      estado: "COMPLETADO",
+                      mesa: pedidoCambiado.mesa,
+                      pedido: newPedido,
+                      total: pedidoCambiado.total
+                    }
+                  }
+                })
+              } catch (error) {
+                console.log(error);
+              }
+            }
           }
         }}>
         <div className="h-100 w-full sm:w-full md:w-1/2 lg:w-1/4 xl:w-1/4 flex-shrink-0 p-2 flex flex-col">
@@ -165,6 +363,9 @@ const TablaPedidos = () => {
           </div>
         </div>
         </DragDropContext>
+        <button onClick={() => agregarPedido()} className="bg-red-500 text-white w-16 h-16 rounded-xl transition-all shadow-xl absolute hover:bg-red-600" style={{bottom: '3em', right: '3em'}}>
+          <ion-icon name="person-add-outline" style={{fontSize: '1.5em'}}></ion-icon>
+        </button>
       </div>
     </div>
   )
