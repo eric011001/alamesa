@@ -19,7 +19,7 @@ const Menu = () => {
   const router = useRouter();
   const [expandido, setExpandido] = useState(false);
   const {data,loading,error} = useQuery(OBTENER_MI_USUARIO);
-
+  
   if(!loading){
     const {obtenerMiUsuario} = data;
     if(!obtenerMiUsuario.nombre || obtenerMiUsuario.status === "INACTIVO"){

@@ -1,26 +1,13 @@
 import React from 'react'
-import {gql,useQuery} from '@apollo/client';
-import QRCode from 'qrcode.react'
 import Head from 'next/head';
 import Script from 'next/script'
+import TablaQrMesas from '../../components/backend/mesas/TablaQrMesas';
 
-const OBTENER_MESAS = gql`
-    query Query {
-        obtenerMesas {
-            id
-            nombre
-        }
-    }
-`;
 
 const imprimirqr = () => {
-  const {data,loading,error} = useQuery(OBTENER_MESAS);
-  if(loading){
-    return(<p>Cargando...</p>)
-  }
 
-  const {obtenerMesas} = data;
-
+  
+  
   return(
     <>
     <Head>
@@ -31,14 +18,7 @@ const imprimirqr = () => {
       
     </Head>
       <Script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></Script>
-      <div className="w-full">
-        <div className="grid grid-cols-2 gap-4 ">
-        {obtenerMesas.map(mesa => (
-          <QRCode size={200} value={mesa.id} />
-        ))}
-      </div>
-      </div>
-    
+      <TablaQrMesas/>
     </>
   )
 }

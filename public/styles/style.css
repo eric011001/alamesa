@@ -188370,3 +188370,10 @@ video {
 .borde {
   border: 1px solid blue;
 }
+@media print{
+  div.saltopagina {
+     display: block;
+     background-color: red;
+     page-break-before: always;
+  }
+}
