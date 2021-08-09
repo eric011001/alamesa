@@ -101,7 +101,7 @@ const editarPlatillo = () => {
         categoriaInput: Yup.string().required('La categoria es necesaria'),
         descripcionInput: Yup.string()
     })
-
+    console.log(error);
     if(loading || !data || loadingCategoria){
         return(<p>s</p>)
     }

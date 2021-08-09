@@ -32,20 +32,18 @@ const TablaQrMesas = () => {
     let html = '';
 
     for (let i = 0; i < secciones; i++) {
-      html += <div className="grid grid-cols-2 gap-4 ">;
+      /*html += <div className="grid grid-cols-2 gap-4 ">;
       for (let j = 0; j < 8; j++) {
         
         
       }
-      html += </div>;
+      html += </div>;*/
     }
     return html;
   }
   console.log(secciones);
   return(
     <div className="w-full">
-      
-        {imprimeSecciones()}
         {obtenerMesas.map((mesa,index) => (
           index + 1 % 8 === 0 ? (
             <>
@@ -56,7 +54,6 @@ const TablaQrMesas = () => {
             <QRCode key={mesa.id} size={200} value={`${hostname}/nuevoPedido/${mesa.id}`} />
           )    
         ))}
-      </div>
     </div>
   )
 }

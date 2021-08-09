@@ -3,7 +3,7 @@ import {useQuery, gql, useMutation} from "@apollo/client";
 import { useRouter } from "next/router";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Pedido from './Pedido';
-
+import Swal from 'sweetalert2';
 const OBTENER_PEDIDOS = gql`
   query Query {
     obtenerPedidos {
@@ -105,7 +105,7 @@ const TablaPedidos = () => {
           if (source.index === destination.index && source.droppableId === destination.droppableId) {
             return;
           }
-          
+          console.log(result);
           if(source.droppableId === "pendientes"){
             const pedidoCambiado = pendientes[source.index];
             const newPedido = pedidoCambiado.pedido.map(({__typename,...pedido}) => pedido);
@@ -145,22 +145,37 @@ const TablaPedidos = () => {
                 console.log(error);
               }
             } else {
-              try {
-                const {data} = await ActualizarPedidoMutation({
-                  variables:{
-                    id: pedidoCambiado.id,
-                    input: {
-                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
-                      estado: "COMPLETADO",
-                      mesa: pedidoCambiado.mesa,
-                      pedido: newPedido,
-                      total: pedidoCambiado.total
-                    }
+              Swal.fire({
+                title: '¿Deseas completar este pedido?',
+                text: 'El pedido dejara de aparecer en la tabla de pedidos activos',
+                icon: 'warning',
+                iconColor: '#ef4444',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                reverseButtons: true,
+                confirmButtonText: 'Si, completar',
+                cancelButtonText: 'No, cancelar'
+              }).then(async (result) => {
+                if (result.value) {
+                  try {
+                    const {data} = await ActualizarPedidoMutation({
+                      variables:{
+                        id: pedidoCambiado.id,
+                        input: {
+                          comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                          estado: "COMPLETADO",
+                          mesa: pedidoCambiado.mesa,
+                          pedido: newPedido,
+                          total: pedidoCambiado.total
+                        }
+                      }
+                    })
+                  } catch (error) {
+                    console.log(error);
                   }
-                })
-              } catch (error) {
-                console.log(error);
-              }
+                }
+              });
             }
           }else if(source.droppableId === "preparacion"){
             const pedidoCambiado = preparacion[source.index];
@@ -200,22 +215,37 @@ const TablaPedidos = () => {
                 console.log(error);
               }
             }else{
-              try {
-                const {data} = await ActualizarPedidoMutation({
-                  variables:{
-                    id: pedidoCambiado.id,
-                    input: {
-                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
-                      estado: "COMPLETADO",
-                      mesa: pedidoCambiado.mesa,
-                      pedido: newPedido,
-                      total: pedidoCambiado.total
-                    }
+              Swal.fire({
+                title: '¿Deseas completar este pedido?',
+                text: 'El pedido dejara de aparecer en la tabla de pedidos activos',
+                icon: 'warning',
+                iconColor: '#ef4444',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                reverseButtons: true,
+                confirmButtonText: 'Si, completar',
+                cancelButtonText: 'No, cancelar'
+              }).then(async (result) => {
+                if (result.value) {
+                  try {
+                    const {data} = await ActualizarPedidoMutation({
+                      variables:{
+                        id: pedidoCambiado.id,
+                        input: {
+                          comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                          estado: "COMPLETADO",
+                          mesa: pedidoCambiado.mesa,
+                          pedido: newPedido,
+                          total: pedidoCambiado.total
+                        }
+                      }
+                    })
+                  } catch (error) {
+                    console.log(error);
                   }
-                })
-              } catch (error) {
-                console.log(error);
-              }
+                }
+              });
             }
           }else if(source.droppableId === "enviado"){
             const pedidoCambiado = enviado[source.index];
@@ -255,22 +285,37 @@ const TablaPedidos = () => {
                 console.log(error);
               }
             }else{
-              try {
-                const {data} = await ActualizarPedidoMutation({
-                  variables:{
-                    id: pedidoCambiado.id,
-                    input: {
-                      comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
-                      estado: "COMPLETADO",
-                      mesa: pedidoCambiado.mesa,
-                      pedido: newPedido,
-                      total: pedidoCambiado.total
-                    }
+              Swal.fire({
+                title: '¿Deseas completar este pedido?',
+                text: 'El pedido dejara de aparecer en la tabla de pedidos activos',
+                icon: 'warning',
+                iconColor: '#ef4444',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                reverseButtons: true,
+                confirmButtonText: 'Si, completar',
+                cancelButtonText: 'No, cancelar'
+              }).then(async (result) => {
+                if (result.value) {
+                  try {
+                    const {data} = await ActualizarPedidoMutation({
+                      variables:{
+                        id: pedidoCambiado.id,
+                        input: {
+                          comentario: pedidoCambiado.comentario ? pedidoCambiado.comentario : "",
+                          estado: "COMPLETADO",
+                          mesa: pedidoCambiado.mesa,
+                          pedido: newPedido,
+                          total: pedidoCambiado.total
+                        }
+                      }
+                    })
+                  } catch (error) {
+                    console.log(error);
                   }
-                })
-              } catch (error) {
-                console.log(error);
-              }
+                }
+              });
             }
           }
         }}>
@@ -360,7 +405,16 @@ const TablaPedidos = () => {
             <h1 className="text-white text-xl font-semibold">Completado</h1>
           </div>
           <div className="bg-gray-100 flex-grow rounded-b-xl flex">
-            
+            <Droppable
+              droppableId="completado"
+            >
+              {(droppableProvider,snapshot) => (
+                <ul className="mt-4 px-2 w-full" {...droppableProvider.droppableProps} ref={droppableProvider.innerRef} >
+                  
+                  {droppableProvider.placeholder}
+                </ul>
+              )}
+            </Droppable>
           </div>
         </div>
         </DragDropContext>
