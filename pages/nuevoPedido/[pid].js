@@ -4,12 +4,11 @@ import { useRouter } from 'next/router';
 import HeadApp from '../../components/Head';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
-
 import BottomSheetPedido from '../../components/frontend/nuevoPedido/BottomSheetPedido';
 
 const OBTENER_PLATILLOS = gql`
 query Query {
-  obtenerPlatillos {
+  obtenerPlatillosDisponibles {
       id
       descripcion
       nombre
@@ -76,15 +75,19 @@ const nuevoPedido = () => {
       confirmButtonColor: '#ef4444',
       
     })
+    router.push('/');
+    return(
+      <HeadApp />
+    )
   }
-  const { obtenerPlatillos } = dataPlatillos;
-
+  const { obtenerPlatillosDisponibles } = dataPlatillos;
+  
   return (
     <>
       <HeadApp />
       <div className="flex flex-col bg-white h-full  p-2">
         <h1 className="font-bold text-3xl text-red-500 p-2">Menú</h1>
-        <span className="font-bold text-xl text-red-500 p-2">Mesa: {mesa}</span>
+        <span className="font-bold text-xl text-red-500 p-2">Mesa: {data.obtenerMesa ? (data.obtenerMesa.nombre) : ('')}</span>
         <BottomSheetPedido />
       </div>
     </>
