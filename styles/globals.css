@@ -110,3 +110,41 @@ body {
 .menu .toggle-button ion-icon {
   font-size: 1.5em;
 }
+
+.bottomsheet {
+  transform: translateY(200px);
+}
+
+.bottomsheet-opened {
+  animation-name: bottomsheetOpen;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.bottomsheet-closed {
+  animation-name: bottomsheetClosed;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes bottomsheetOpen {
+  from {
+    transform: translateY(245px);
+  }
+
+  to {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes bottomsheetClosed {
+  from {
+    transform: translateY(0px);
+  }
+
+  to {
+    transform: translateY(245px);
+  }
+}

@@ -118,7 +118,12 @@ const TablaCategorias = () => {
       },
     }).then((result) => {
       if (result.isConfirmed && result.value) {
-        Swal.fire("Creado", "Se creó la categoria Correctamente", "success");
+        Swal.fire({
+          icon: 'success',
+          title: 'Creado',
+          text: 'se creó la categoria exitosamente',
+          confirmButtonColor: '#ef4444'
+        });
       }
     });
   };
@@ -142,7 +147,12 @@ const TablaCategorias = () => {
             }
           }
         })
-        Swal.fire("Actualizado", "Nuevo orden aplicado", "success");
+        Swal.fire({
+          icon: 'success',
+          title: 'Actualizado',
+          text: 'Nuevo orden aplicado',
+          confirmButtonColor: '#ef4444'
+        });
       } catch (error) {
         console.log(error);
       }

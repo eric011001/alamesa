@@ -28,7 +28,7 @@ const Platillo = ({ platillo }) => {
   const { nombre, precio, disponible, id, categoria: { nombre: nombreCategoria } } = platillo;
   const router = useRouter();
 
-  const [EliminarMesaMutation] = useMutation(ELIMINA_PLATILLO, {
+  const [EliminarPlatilloMutation] = useMutation(ELIMINA_PLATILLO, {
     update(cache) {
       const { obtenerPlatillos } = cache.readQuery({ query: OBTENER_PLATILLOS });
       cache.writeQuery({
@@ -53,20 +53,26 @@ const Platillo = ({ platillo }) => {
       text: 'Esta acción no se peude deshacer',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
       reverseButtons: true,
       confirmButtonText: 'Si, eliminar',
       cancelButtonText: 'No, cancelar'
     }).then(async (result) => {
       if (result.value) {
         try {
-          const { data } = await EliminarMesaMutation({
+          const { data } = await EliminarPlatilloMutation({
             variables: {
               id
             }
           });
-          Swal.fire('Eliminado', data.EliminarMesaMutation, 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Eliminado',
+            text: data.EliminarPlatilloMutation,
+            confirmButtonColor: '#ef4444'
+          });
+
         } catch (error) {
           console.log(error);
         }

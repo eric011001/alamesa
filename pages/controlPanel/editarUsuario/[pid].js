@@ -124,11 +124,13 @@ const editarUsuario = () => {
         }
       }).then((result) => {
           if(result.isConfirmed && result.value){
-            Swal.fire(
-                'actualizado',
-                'Se actualizó la mesa Correctamente',
-                'success'
-            );
+            Swal.fire({
+              icon: 'success',
+              title: 'Actualizado',
+              text: 'se actualizó la clave exitosamente',
+              confirmButtonColor: '#ef4444'
+            })
+            
           }
         
       })
@@ -148,11 +150,12 @@ const editarUsuario = () => {
             }
           }
         });
-        Swal.fire(
-          'Actualizado',
-          'El usuario se actualizo correctamente',
-          'success'
-        );
+        Swal.fire({
+          icon: 'success',
+          title: 'Actualizado',
+          text: 'se actualizó el usuario exitosamente',
+          confirmButtonColor: '#ef4444'
+        })
         router.push("/controlPanel/usuarios")
       } catch (error) {
         guardarMensaje(error.message.replace('GraphQL error: ', ''));
@@ -224,7 +227,7 @@ const editarUsuario = () => {
                         <form onSubmit={props.handleSubmit} className="flex w-full">
       <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
         <div className="h-16 flex justify-left items-center">
-          <h1 className="ml-4 text-2xl font-bold text-red-500">editar usuario</h1>
+          <h1 className="ml-4 text-2xl font-bold text-red-500">Editar usuario</h1>
         </div>
         <div className="flex-grow m-8 flex flex-col">
           <div className="flex flex-wrap">
@@ -271,7 +274,7 @@ const editarUsuario = () => {
           </div>
           <div className="flex flex-wrap justify-center">
             <button type="button" onClick={() => cambiaClave()} className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">Cambiar contraseña</button>
-            <button type="submit" className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">actualizar usuario</button>
+            <button type="submit" className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">Actualizar usuario</button>
           </div>
         </div>
       </div>

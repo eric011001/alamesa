@@ -74,7 +74,12 @@ const Categoria = ({ categoria, index }) => {
       },
     }).then((result) => {
       if (result.isConfirmed && result.value) {
-        Swal.fire("Creado", "Se actualizó la categoria Correctamente", "success");
+        Swal.fire({
+          icon: 'success',
+          title: 'Actualizado',
+          text: 'Se actualiz+o la categoria correctamente',
+          confirmButtonColor: '#ef4444'
+        });
         router.reload("/controlPanel/categorias")
       }
     });
@@ -100,7 +105,12 @@ const Categoria = ({ categoria, index }) => {
               id
             }
           });
-          Swal.fire('Eliminado', data.EliminarCategoriaMutation, 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Eliminado',
+            text: data.EliminarCategoriaMutation,
+            confirmButtonColor: '#ef4444'
+          });
         } catch (error) {
           console.log(error);
         }

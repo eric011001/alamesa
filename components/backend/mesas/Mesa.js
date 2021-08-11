@@ -72,11 +72,12 @@ const Mesa = ({mesa}) => {
         }
       }).then((result) => {
           if(result.isConfirmed && result.value){
-            Swal.fire(
-                'actualizado',
-                'Se actualizó la mesa Correctamente',
-                'success'
-            );
+            Swal.fire({
+              icon: 'success',
+              title: 'Actualizado',
+              text: 'se actualizó la mesa exitosamente',
+              confirmButtonColor: '#ef4444'
+            })
           }
         
       })
@@ -102,7 +103,12 @@ const Mesa = ({mesa}) => {
                   id
                 }
               });
-              Swal.fire('Eliminado', data.EliminarMesaMutation, 'success');
+              Swal.fire({
+                icon: 'success',
+                title: 'Eliminado',
+                text: data.EliminarMesaMutation,
+                confirmButtonColor: '#ef4444'
+              });
             } catch (error) {
               console.log(error);
             }

@@ -98,11 +98,12 @@ const nuevoUsuario = () => {
             }
           }
         });
-        Swal.fire(
-          'Creado',
-          'Se creó el usuario exitosamente',
-          'success'
-        );
+        Swal.fire({
+          icon: 'success',
+          title: 'Creado',
+          text: 'Se creó el usuario exitosamente',
+          confirmButtonColor: '#ef4444'
+        });
         router.push('/controlPanel/usuarios')
 
       } catch (error) {

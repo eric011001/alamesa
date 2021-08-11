@@ -72,11 +72,12 @@ const TablaMesas = () => {
             }
           }).then((result) => {
               if(result.isConfirmed && result.value){
-                Swal.fire(
-                    'Creado',
-                    'Se creó la mesa Correctamente',
-                    'success'
-                );
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Creado',
+                    text: 'se creó la mesa exitosamente',
+                    confirmButtonColor: '#ef4444'
+                })
               }
             
           })

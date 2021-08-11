@@ -19,11 +19,7 @@ const OBTENER_CATEGORIAS = gql`
 const NUEVO_PLATILLO = gql`
   mutation CrearPlatilloMutation($input: PlatilloInput!) {
     crearPlatillo(input: $input) {
-      categoria {
-        id
-        nombre
-        orden
-      }
+      
       descripcion
       disponible
       extras {
@@ -110,13 +106,15 @@ const nuevoPlatillo = () => {
             }
           }
         })
-        Swal.fire(
-          'Creado',
-          'Se creó el platillo exitosamente',
-          'success'
-        );
+        Swal.fire({
+          icon: 'success',
+          title: 'Creado',
+          text: 'se creó el platillo exitosamente',
+          confirmButtonColor: '#ef4444'
+        })
         router.push('/controlPanel/platillos')
       } catch (error) {
+        log
         guardarMensaje(error.message.replace('GraphQL error: ', ''));
         setTimeout(() => {
           guardarMensaje(null);

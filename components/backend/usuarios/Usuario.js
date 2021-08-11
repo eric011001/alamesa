@@ -51,8 +51,8 @@ const Usuario = ({ usuario }) => {
       text: 'Esta acción no se peude deshacer',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
       reverseButtons: true,
       confirmButtonText: 'Si, eliminar',
       cancelButtonText: 'No, cancelar'
@@ -64,7 +64,12 @@ const Usuario = ({ usuario }) => {
               id
             }
           });
-          Swal.fire('Eliminado', data.EliminarUsuarioMutation, 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Eliminado',
+            text: data.EliminarUsuarioMutation,
+            confirmButtonColor: '#ef4444'
+          })
         } catch (error) {
           console.log(error);
         }

@@ -126,11 +126,12 @@ const editarPlatillo = () => {
                     }
                 }
             })
-            Swal.fire(
-                'Actualizado',
-                'Se actualizó el platillo exitosamente',
-                'success'
-              );
+            Swal.fire({
+              icon: 'success',
+              title: 'Actualizado',
+              text: 'Se actualizó el platillo exitosamente',
+              confirmButtonColor: '#ef4444'
+            });
             router.push('/controlPanel/platillos')
         } catch (error) {
             guardarMensaje(error.message.replace('GraphQL error: ', ''));
