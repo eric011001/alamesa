@@ -5,6 +5,7 @@ import HeadApp from '../../components/Head';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 import BottomSheetPedido from '../../components/frontend/nuevoPedido/BottomSheetPedido';
+import Platillo from '../../components/frontend/nuevoPedido/Platillo';
 
 const OBTENER_PLATILLOS = gql`
 query Query {
@@ -81,13 +82,20 @@ const nuevoPedido = () => {
     )
   }
   const { obtenerPlatillosDisponibles } = dataPlatillos;
-  
+  console.log(obtenerPlatillosDisponibles);
   return (
     <>
       <HeadApp />
-      <div className="flex flex-col bg-white h-full  p-2">
-        <h1 className="font-bold text-3xl text-red-500 p-2">Menú</h1>
-        <span className="font-bold text-xl text-red-500 p-2">Mesa: {data.obtenerMesa ? (data.obtenerMesa.nombre) : ('')}</span>
+      <div className="flex flex-col bg-white h-full">
+        <div className="fixed bg-white w-full pb-4">
+          <h1 className="font-bold text-3xl text-red-500 p-2">Menú</h1>
+          <span className="font-bold text-xl text-red-500 p-2">Mesa: {data.obtenerMesa ? (data.obtenerMesa.nombre) : ('')}</span>
+        </div>
+        <div className="mt-24 p-2 h-5/6 overflow-auto mb-10 flex flex-col flex-nowrap">
+          {obtenerPlatillosDisponibles.map((platillo, index) => (
+            <Platillo key={index} platillo={platillo}/>
+          ))}
+        </div>
         <BottomSheetPedido />
       </div>
     </>

@@ -131,7 +131,7 @@ body {
 
 @keyframes bottomsheetOpen {
   from {
-    transform: translateY(245px);
+    transform: translateY(300px);
   }
 
   to {
@@ -145,6 +145,6 @@ body {
   }
 
   to {
-    transform: translateY(245px);
+    transform: translateY(325px);
   }
 }

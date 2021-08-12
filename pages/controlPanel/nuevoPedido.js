@@ -7,6 +7,8 @@ import Swal from "sweetalert2";
 import Select from "react-select";
 import HeadApp from '../../components/Head';
 import Menu from '../../components/menu/Menu';
+import TablaCategorias from '../../components/backend/pedidos/TablaCategorias';
+import TablaPlatillos from '../../components/backend/pedidos/TablaPlatillos';
 
 const NUEVO_PEDIDO = gql`
     mutation CrearPedidoMutation($input: PedidoInput) {
@@ -55,14 +57,26 @@ const OBTENER_PLATILLOS = gql`
             disponible
             categoria {
             nombre
+            id
             }
         }
     }
 `;
 
+const OBTENER_CATEGORIAS = gql`
+  query Query {
+    obtenerCategorias {
+      id
+      nombre
+      orden
+    }
+  }
+`;
+
 const nuevoPedido = () => {
     const router = useRouter();
     const [mensaje, guardarMensaje] = useState(null);
+    const [categoriaActual, setCategoriaActual] = useState(null);
     const [mesa, setMesa] = useState(null);
     const [pedido, setPedido] = useState([])
     const [CrearPedidoMutation] = useMutation(NUEVO_PEDIDO,{
@@ -79,6 +93,7 @@ const nuevoPedido = () => {
 
     const {data,loading,error} = useQuery(OBTENER_MESAS);
     const {data: dataPlatillos, loading:loadingPlatillos, error: errorPlatillo} = useQuery(OBTENER_PLATILLOS);
+    const {data: dataCategorias, loading: loadingCategorias, error: errorCategorias} = useQuery(OBTENER_CATEGORIAS);
     const formikPedido = useFormik({
         initialValues: {
             comentarioInput: '',
@@ -126,7 +141,7 @@ const nuevoPedido = () => {
         })
     };
 
-    if (loading || loadingPlatillos) {
+    if (loading || loadingPlatillos || loadingCategorias) {
       return (
         'Cargando...'
       )
@@ -135,17 +150,18 @@ const nuevoPedido = () => {
     
     const {obtenerMesas} = data;
     const {obtenerPlatillos} = dataPlatillos;
-    console.log(obtenerPlatillos);
+    const {obtenerCategorias} = dataCategorias;                                                                             
+    console.log(obtenerCategorias);
     return(
         <div className="flex">
             <HeadApp/>
             <Menu/> 
-            <form onSubmit={formikPedido.handleSubmit} className="flex w-full">
-              <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
-                <div className="h-16 flex justify-left items-center">
-                  <h1 className="ml-4 text-2xl font-bold text-red-500">Agregar pedido </h1>
-                </div>
-                <div className="flex-grow m-8 flex flex-col">
+            <div className="ml-6 mt-3 flex flex-col flex-grow h-auto mr-4 bg-white flex-shrink shadow-lg rounded-xl">
+              <div className="h-16 flex justify-left items-center">
+                <h1 className="ml-4 text-2xl font-bold text-red-500">Agregar pedido </h1>
+              </div>
+              <div className="xl:flex">
+                <div className="flex-grow m-8 xl:w-3/5 sm:full flex flex-col">
                   <div className="flex flex-wrap">
                     <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
                       <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="mesaInput">Mesa:</label>
@@ -162,15 +178,18 @@ const nuevoPedido = () => {
                       ): null}
                     </div>
                     <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
-                      <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" htmlFor="pedidoInput">Pedido:</label>
-                      <Select id="pedidoInput"
-                        options={obtenerPlatillos}
-                        getOptionValue={(platillo) => platillo.nombre}
-                        getOptionLabel={(platillo) => `${platillo.nombre}-$${platillo.precio}`}
-                        isMulti={true}
-                        onChange={selectedOption => {
-                        setPedido(selectedOption);}} value={pedido} className="m-2" styles={selectStyles}
-                      />
+                      <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block" >Pedido:</label>
+                      <div class="grid  ml-4 xl:grid-cols-4 sm:grid-cols-2 gap-4 mb-5">
+                        <TablaCategorias categorias = {obtenerCategorias} setCategoriaActual={setCategoriaActual}/>
+                      </div>
+                      {
+                        categoriaActual ? (
+                          <div class="grid  ml-4 xl:grid-cols-4 sm:grid-cols-2 gap-4">
+                            <TablaPlatillos platillos = {obtenerPlatillos} idCategoria = {categoriaActual}/>
+                          </div>
+                        ): (null)
+                      }
+                      
                     </div>
                     <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
                       <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block">Resumen:</label>
@@ -190,10 +209,12 @@ const nuevoPedido = () => {
                       <button type="submit" className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">Agregar Pedido</button>
                     </div>
                   </div>
-                  
+                </div>
+                <div className="flex-grow m-8 w-2/5 flex flex-col">
+                  s
                 </div>
               </div>
-            </form>
+            </div>
         </div>
     )
 }
