@@ -49,7 +49,7 @@ const OBTENER_MESAS = gql`
 
 const OBTENER_PLATILLOS = gql`
     query Query {
-        obtenerPlatillos {
+        obtenerPlatillosDisponibles {
             id
             descripcion
             nombre
@@ -149,9 +149,22 @@ const nuevoPedido = () => {
 
     
     const {obtenerMesas} = data;
-    const {obtenerPlatillos} = dataPlatillos;
-    const {obtenerCategorias} = dataCategorias;                                                                             
-    console.log(obtenerCategorias);
+    const {obtenerPlatillosDisponibles} = dataPlatillos;
+    const {obtenerCategorias} = dataCategorias;    
+
+
+    const agregaPlatillo = (platillo) => {
+      const platillosCategoria = pedido.filter(platilloActual => {
+        return platillo.id === platilloActual.id
+      })
+      if(platillosCategoria.length !== 0){
+        setCategoriaActual(null)
+        return
+      }
+      
+      setPedido((pedidoActual) => [...pedidoActual,platillo]);
+      setCategoriaActual(null);
+    }
     return(
         <div className="flex">
             <HeadApp/>
@@ -185,20 +198,13 @@ const nuevoPedido = () => {
                       {
                         categoriaActual ? (
                           <div class="grid  ml-4 xl:grid-cols-4 sm:grid-cols-2 gap-4">
-                            <TablaPlatillos platillos = {obtenerPlatillos} idCategoria = {categoriaActual}/>
+                            <TablaPlatillos platillos = {obtenerPlatillosDisponibles} idCategoria = {categoriaActual} agregaPlatillo = {agregaPlatillo}/>
                           </div>
                         ): (null)
                       }
                       
                     </div>
-                    <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
-                      <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block">Resumen:</label>
-                      <div className="w-full">
-                        {pedido.map(pedidoUnico => (
-                          <p>{pedidoUnico.nombre}</p>
-                        ))}
-                      </div>
-                    </div>
+                    
                     <div className="flex flex-wrap w-full">
                       <div className="w-full flex-shrink-0 flex flex-col">
                         <label className="font-semibold mt-2 mb-2 ml-3 mr-2 block" htmlFor="comentarioInput">Comentarios:</label>
@@ -211,7 +217,14 @@ const nuevoPedido = () => {
                   </div>
                 </div>
                 <div className="flex-grow m-8 w-2/5 flex flex-col">
-                  s
+                  <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
+                      <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block">Resumen:</label>
+                      <div className="w-full">
+                        {pedido.map(pedidoUnico => (
+                          <p>{pedidoUnico.nombre}</p>
+                        ))}
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>
