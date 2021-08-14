@@ -9,6 +9,7 @@ import HeadApp from '../../components/Head';
 import Menu from '../../components/menu/Menu';
 import TablaCategorias from '../../components/backend/pedidos/TablaCategorias';
 import TablaPlatillos from '../../components/backend/pedidos/TablaPlatillos';
+import PlatilloRegistrado from '../../components/backend/pedidos/PlatilloRegistrado';
 
 const NUEVO_PEDIDO = gql`
     mutation CrearPedidoMutation($input: PedidoInput) {
@@ -58,6 +59,10 @@ const OBTENER_PLATILLOS = gql`
             categoria {
             nombre
             id
+            }
+            extras {
+              nombre
+              precio
             }
         }
     }
@@ -219,9 +224,9 @@ const nuevoPedido = () => {
                 <div className="flex-grow m-8 w-2/5 flex flex-col">
                   <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
                       <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block">Resumen:</label>
-                      <div className="w-full">
-                        {pedido.map(pedidoUnico => (
-                          <p>{pedidoUnico.nombre}</p>
+                      <div className="flex flex-col w-full mx-2 mb-4">
+                        {pedido.map((platillo) => (
+                          <PlatilloRegistrado key={platillo.id} platillo={platillo} />
                         ))}
                       </div>
                     </div>
