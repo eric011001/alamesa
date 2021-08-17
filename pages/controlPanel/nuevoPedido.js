@@ -83,7 +83,8 @@ const nuevoPedido = () => {
     const [mensaje, guardarMensaje] = useState(null);
     const [categoriaActual, setCategoriaActual] = useState(null);
     const [mesa, setMesa] = useState(null);
-    const [pedido, setPedido] = useState([])
+    const [pedido, setPedido] = useState([]);
+    const [comentario, setComentario] = useState("")
     const [CrearPedidoMutation] = useMutation(NUEVO_PEDIDO,{
         update(cache, { data: { crearPedido } }) {
             const { obtenerPedidos } = cache.readQuery({ query: OBTENER_PEDIDOS });
@@ -158,16 +159,73 @@ const nuevoPedido = () => {
     const {obtenerCategorias} = dataCategorias;    
 
 
-    const agregaPlatillo = (platillo) => {
-      const platillosCategoria = pedido.filter(platilloActual => {
-        return platillo.id === platilloActual.id
-      })
-      if(platillosCategoria.length !== 0){
-        setCategoriaActual(null)
-        return
+    const registrarPedido = async () => {
+      const lastPedido = pedido.map(({__typename,categoria,id,descripcion,disponible,extras,...servicio})=>servicio);
+      
+      if(!mesa){
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'favor de seleccionar una mesa',
+          confirmButtonColor: '#ef4444'
+        })
+        return;
+      }
+      if(pedido.length === 0){
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se ha ordenado nada',
+          confirmButtonColor: '#ef4444'
+        })
+        return;
+      }
+      let total = 0;
+      let newPedido = [];
+      lastPedido.forEach(pedidoActual => {
+        newPedido.push({
+          nombre: pedidoActual.nombre,
+          extras: pedidoActual.pedidoExtras,
+          cantidad: pedidoActual.cantidad,
+          precio: pedidoActual.platilloTotal
+        });
+        total += pedidoActual.platilloTotal;
+      });
+      try {
+        const {data} = await CrearPedidoMutation({
+          variables:{
+            input: {
+              mesa: mesa.nombre,
+              comentario,
+              pedido: newPedido,
+              total,
+              estado: "PENDIENTE"
+            }
+          }
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Creado',
+          text: 'se creó el pedido exitosamente',
+          confirmButtonColor: '#ef4444'
+        })
+        router.push('/controlPanel/pedidos')
+      } catch (error) {
+        console.log(error);
       }
       
-      setPedido((pedidoActual) => [...pedidoActual,platillo]);
+    }
+
+    const agregaPlatillo = (platillo) => {
+      
+      const nuevoPlatillo = {
+        ...platillo,
+        pedidoExtras: Array(1),
+        cantidad:1,
+        platilloTotal: platillo.precio
+      }
+      console.log(nuevoPlatillo);
+      setPedido((pedidoActual) => [...pedidoActual,nuevoPlatillo]);
       setCategoriaActual(null);
     }
     return(
@@ -213,20 +271,20 @@ const nuevoPedido = () => {
                     <div className="flex flex-wrap w-full">
                       <div className="w-full flex-shrink-0 flex flex-col">
                         <label className="font-semibold mt-2 mb-2 ml-3 mr-2 block" htmlFor="comentarioInput">Comentarios:</label>
-                        <textarea className="p-2 m-2 w-auto block bg-gray-200 focus:bg-gray-300 outline-none rounded-xl transition-colors" id="comentarioInput"  onChange={formikPedido.handleChange} onBlur={formikPedido.handleBlur} value={formikPedido.values.comentarioInput} ></textarea>
+                        <textarea  onChange={(e) => setComentario(e.target.value)} value={comentario} className="p-2 m-2 w-auto block bg-gray-200 focus:bg-gray-300 outline-none rounded-xl transition-colors" id="comentarioInput" ></textarea>
                       </div>
                     </div>
                     <div className="flex w-full flex-wrap justify-center">
-                      <button type="submit" className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">Agregar Pedido</button>
+                      <button type="button" onClick={() => registrarPedido()} className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">Agregar Pedido</button>
                     </div>
                   </div>
                 </div>
-                <div className="flex-grow m-8 w-2/5 flex flex-col">
+                <div className="flex-grow m-8 xl:w-2/5 md:w-full flex flex-col">
                   <div className="w-full sm:w-full md:w-full lg:w-full xl:w-full flex-shrink-0 flex flex-col">
                       <label className="font-semibold mt-2 mb-2 ml-4 mr-2 block">Resumen:</label>
-                      <div className="flex flex-col w-full mx-2 mb-4">
+                      <div className="flex flex-col w-full mx-2  mb-4 ">
                         {pedido.map((platillo) => (
-                          <PlatilloRegistrado key={platillo.id} platillo={platillo} />
+                          <PlatilloRegistrado key={platillo.id} platillo={platillo} pedido ={pedido} setPedido={setPedido}/>
                         ))}
                       </div>
                     </div>
