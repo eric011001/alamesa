@@ -42,7 +42,7 @@ const PlatilloRegistrado = ({platillo,pedido,setPedido}) => {
         extrasString.push(extraUnico.nombre);
         totalPlatillo += extraUnico.precio;
       });
-      setTotalFinal(totalPlatillo);
+      setTotalFinal(totalPlatillo*cantidad);
       miPedido.platilloTotal = totalPlatillo;
       miPedido.pedidoExtras = extrasString;
       return lastPedido;
@@ -68,10 +68,11 @@ const PlatilloRegistrado = ({platillo,pedido,setPedido}) => {
       setPedido((lastPedido) => {
         const miPedido = lastPedido.filter(platilloActual => platilloActual.id === id)[0];
         miPedido.cantidad = cantidadNueva;
-        console.log(miPedido);
         return lastPedido;
       });
-      setCantidad(cantidadNueva)
+      setTotalFinal(lastTotal => (lastTotal/cantidad)*cantidadNueva);
+      setCantidad(cantidadNueva);
+      
     }
   }
 

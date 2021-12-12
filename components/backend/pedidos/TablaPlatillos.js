@@ -1,7 +1,8 @@
 import React from 'react';
 
 const TablaPlatillos = ({platillos, idCategoria, agregaPlatillo}) => {
-
+  console.log(platillos);
+  console.log(idCategoria);
   const platillosCategoria = platillos.filter(platillo => {
     return platillo.categoria.id === idCategoria
   })

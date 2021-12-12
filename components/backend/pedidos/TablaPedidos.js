@@ -6,7 +6,7 @@ import Pedido from './Pedido';
 import Swal from 'sweetalert2';
 const OBTENER_PEDIDOS = gql`
   query Query {
-    obtenerPedidos {
+    obtenerPedidosActivos {
       id
       comentario
       estado
@@ -15,6 +15,7 @@ const OBTENER_PEDIDOS = gql`
         cantidad
         nombre
         precio
+        extras
         __typename
       }
       total
@@ -37,10 +38,11 @@ const ACTUALIZAR_PEDIDO = gql`
 
 const TablaPedidos = () => {
   const router = useRouter();
-  const {data,loading,error,startPolling,stopPolling} = useQuery(OBTENER_PEDIDOS);
-  const [pendientes, setPendientes] = useState(null);
-  const [preparacion, setPreparacion] = useState(null);
-  const [enviado, setEnviado] = useState(null);
+  const {data,loading,error, startPolling, stopPolling} = useQuery(OBTENER_PEDIDOS);
+  const [pendientes, setPendientes] = useState([]);
+  const [preparacion, setPreparacion] = useState([]);
+  const [enviado, setEnviado] = useState([]);
+  const [ultima, setUltima] = useState(false)
   const [ActualizarPedidoMutation] = useMutation(ACTUALIZAR_PEDIDO);
   useEffect(
     () => {
@@ -63,32 +65,96 @@ const TablaPedidos = () => {
     )
   }
 
-  const {obtenerPedidos} = data;
-  const cantidadPendientes = obtenerPedidos.filter(pedido => pedido.estado === "PENDIENTE");
-  const cantidadPreparacion = obtenerPedidos.filter(pedido => pedido.estado === "ENPREPARACION" );
-  const cantidadEnviado = obtenerPedidos.filter(pedido => pedido.estado === "ENVIADO");
+  const {obtenerPedidosActivos} = data;
+  const cantidadPendientes = obtenerPedidosActivos.filter(pedido => pedido.estado === "PENDIENTE");
+  const cantidadPreparacion = obtenerPedidosActivos.filter(pedido => pedido.estado === "ENPREPARACION" );
+  const cantidadEnviado = obtenerPedidosActivos.filter(pedido => pedido.estado === "ENVIADO");
 
-  if (!pendientes || cantidadPendientes.length !== pendientes.length || cantidadPreparacion.length !== preparacion.length || cantidadEnviado.length !== enviado.length) {
-    let tempPendientes = []
-    let tempPreparacion = []
-    let tempEnviado = []
+  if(cantidadPendientes.length != pendientes.length || cantidadPreparacion.length != preparacion.length || cantidadEnviado.length != enviado.length){
+  //if ( pendientes.length + preparacion.length + enviado.length !== obtenerPedidosActivos.length) {
+    console.log("algo cambio");
+    if(!ultima){
+      console.log(cantidadPreparacion);
+      console.log(cantidadEnviado);
+      let tempPendientes = []
+      let tempPreparacion = []
+      let tempEnviado = []
 
-    obtenerPedidos.forEach(pedido => {
-      if (pedido.estado === 'PENDIENTE') {
-        tempPendientes.push(pedido);
-      } else if (pedido.estado === 'ENPREPARACION') {
-        tempPreparacion.push(pedido)
-      } else if (pedido.estado === 'ENVIADO') {
-        tempEnviado.push(pedido);
-      }
-    })
-    setPendientes(tempPendientes);
-    setPreparacion(tempPreparacion);
-    setEnviado(tempEnviado);
+      obtenerPedidosActivos.forEach(pedido => {
+        if (pedido.estado === 'PENDIENTE') {
+          tempPendientes.push(pedido);
+        } else if (pedido.estado === 'ENPREPARACION') {
+          tempPreparacion.push(pedido)
+        } else if (pedido.estado === 'ENVIADO') {
+          tempEnviado.push(pedido);
+        }
+      })
+      setPendientes(tempPendientes);
+      setPreparacion(tempPreparacion);
+      setEnviado(tempEnviado);
+    }else{
+      setTimeout(() => {
+        setUltima(false);
+      }, 2000);
+    }
+    
   }
 
   const agregarPedido = () => {
     router.push("/controlPanel/nuevoPedido");
+  }
+
+  const generaNuevoEstado = (array,id) => {
+    const newEnviado = array.filter(pedidoActual => pedidoActual.id !== id);
+    return newEnviado
+  }
+
+  const encuentraElemento = (donde,id) => {
+    const elemento = donde.filter(pedidoActual => pedidoActual.id === id);
+    return elemento[0];
+  }
+
+  const cambiaEstado = async (source, destination, id) => {
+    setUltima(true);
+    //console.log(source);
+    let elemento = {};
+    //console.log(destination);
+
+    if(source.droppableId === "enviado"){
+      elemento = encuentraElemento(enviado,id);
+      setEnviado((antEnviado) => generaNuevoEstado(antEnviado,id));
+    }else if(source.droppableId === "pendiente"){
+      elemento = encuentraElemento(pendientes,id);
+      setPendientes((antPendiente) => generaNuevoEstado(antPendiente,id));
+    }else if(source.droppableId === "enpreparacion"){
+      elemento = encuentraElemento(preparacion,id);
+      setPreparacion((antPreparacion) => generaNuevoEstado(antPreparacion,id));
+    }
+    if(destination.droppableId === "enpreparacion"){
+      setPreparacion((antPreparacion) => [...antPreparacion,elemento]);      
+    }else if(destination.droppableId === "pendiente"){
+      setPendientes((antPendiente) => [...antPendiente,elemento]);
+    }else if(destination.droppableId === "enviado"){
+      setEnviado((antEnviado) => [...antEnviado,elemento]);
+    }
+    const newPedido = elemento.pedido.map(({__typename,...pedido}) => pedido);
+    try {
+      const {data} = await ActualizarPedidoMutation({
+        variables:{
+          id: elemento.id,
+          input: {
+            comentario: elemento.comentario ? elemento.comentario : "",
+            estado: destination.droppableId.toUpperCase(),
+            mesa: elemento.mesa,
+            pedido: newPedido,
+            total: elemento.total
+          }
+        }
+      });
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return(
@@ -96,20 +162,26 @@ const TablaPedidos = () => {
       <div className="h-16 flex justify-left items-center">
         <h1 className="ml-4 text-2xl font-bold text-red-500">Pedidos</h1>
       </div>
-      <div className="flex-grow m-8 h-16 flex overflow-x-auto">{/* Pedido, Total, Estado, Comentario, Mesa y Fecha */}
+      <div className="flex-grow m-8 h-16 flex ">{/* Pedido, Total, Estado, Comentario, Mesa y Fecha */}
         <DragDropContext onDragEnd={async result=> {
-          const {source,destination} = result;
+          const {source,destination,draggableId} = result;
           if(!destination){
             return;
           }
           if (source.index === destination.index && source.droppableId === destination.droppableId) {
             return;
           }
-          console.log(result);
-          if(source.droppableId === "pendientes"){
+         // console.log(result);
+          cambiaEstado(source,destination,draggableId);
+          //console.log(result);
+          /*if(source.droppableId === "pendientes"){
             const pedidoCambiado = pendientes[source.index];
             const newPedido = pedidoCambiado.pedido.map(({__typename,...pedido}) => pedido);
             if(destination.droppableId === "preparacion"){
+              setPendientes((lastPedido) => lastPedido.filter(pedidoActual => pedidoActual.id !== pedidoCambiado.id));
+              setPreparacion((lastPreparacion) => [...lastPreparacion,pedidoCambiado]);
+              
+              
               try {
                 const {data} = await ActualizarPedidoMutation({
                   variables:{
@@ -317,7 +389,7 @@ const TablaPedidos = () => {
                 }
               });
             }
-          }
+          }*/
         }}>
         <div className="h-100 w-full sm:w-full md:w-1/2 lg:w-1/4 xl:w-1/4 flex-shrink-0 p-2 flex flex-col">
           <div className="rounded-t-xl bg-red-500 h-12 flex justify-center items-center">
@@ -325,7 +397,7 @@ const TablaPedidos = () => {
           </div>
           <div className="bg-gray-100 flex-grow rounded-b-xl flex">
             <Droppable
-              droppableId="pendientes"
+              droppableId="pendiente"
             >
               {(droppableProvider,snapshot) => (
                 <ul className="mt-4 px-2 w-full" {...droppableProvider.droppableProps} ref={droppableProvider.innerRef} >
@@ -350,12 +422,12 @@ const TablaPedidos = () => {
           <div className="rounded-t-xl bg-red-500 h-12 flex justify-center items-center">
             <h1 className="text-white text-xl font-semibold">Preparación</h1>
           </div>
-          <div className="bg-gray-100 flex-grow rounded-b-xl flex">
+          <div className="bg-gray-100 flex-grow rounded-b-xl flex overflow-x-auto">
             <Droppable
-              droppableId="preparacion"
+              droppableId="enpreparacion"
             >
               {(droppableProvider,snapshot) => (
-                <ul className="mt-4 px-2 w-full" {...droppableProvider.droppableProps} ref={droppableProvider.innerRef} >
+                <ul className="mt-4 px-2 w-full " {...droppableProvider.droppableProps} ref={droppableProvider.innerRef} >
                   {
                     preparacion.map((pedido, index) => (
                       <Draggable key={pedido.id} draggableId={pedido.id} index={index}>

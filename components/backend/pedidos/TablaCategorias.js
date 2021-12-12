@@ -1,7 +1,5 @@
 import React from 'react';
 const TablaCategorias = ({categorias, setCategoriaActual}) => {
-  
-
   return(
     <>
     {categorias.map(categoria => (

@@ -10,18 +10,19 @@ import Platillo from '../../components/frontend/nuevoPedido/Platillo';
 const OBTENER_PLATILLOS = gql`
 query Query {
   obtenerPlatillosDisponibles {
-      id
-      descripcion
+    categoria {
       nombre
+      orden
+    }
+    descripcion
+    disponible
+    extras {
       precio
-      disponible
-      categoria {
-        nombre
-      }
-      extras {
-        nombre
-        precio
-      }
+      nombre
+    }
+    id
+    nombre
+    precio
   }
 }
 `;
@@ -82,7 +83,7 @@ const nuevoPedido = () => {
     )
   }
   const { obtenerPlatillosDisponibles } = dataPlatillos;
-  console.log(obtenerPlatillosDisponibles);
+  console.log(dataPlatillos);
   return (
     <>
       <HeadApp />
@@ -105,7 +106,7 @@ const nuevoPedido = () => {
         <br/>
         <div className="flex flex-row w-full mx-2">
           <Select id="platillosInput"
-            options={obtenerPlatillos}
+            options={obtenerPlatillosDisponibles}
             getOptionValue={(platillo) => platillo.nombre}
             getOptionLabel={(platillo) => `${platillo.nombre} - $${platillo.precio}`}
             isMulti={true}

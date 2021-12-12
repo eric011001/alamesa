@@ -4,17 +4,22 @@ import { useRouter } from "next/router";
 import Platillo from './Platillo';
 const OBTENER_PLATILLOS = gql`
     query Query {
-        obtenerPlatillos {
-            id
-            descripcion
-            nombre
-            precio
-            disponible
-            categoria {
-            nombre
-            }
-        }
+  obtenerPlatillos {
+    categoria {
+      nombre
+      orden
     }
+    descripcion
+    disponible
+    extras {
+      precio
+      nombre
+    }
+    id
+    nombre
+    precio
+  }
+}
 `;
 const TablaPlatillos = () => {
   const router = useRouter();
@@ -30,8 +35,8 @@ const TablaPlatillos = () => {
       </div>
     )
   }
-  const { obtenerPlatillos } = data;
-
+    const { obtenerPlatillos } = data;
+    console.log(obtenerPlatillos);
   const agregarPlatillo = () => {
     router.push('/controlPanel/nuevoPlatillo');
   }

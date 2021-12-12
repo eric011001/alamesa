@@ -22,7 +22,7 @@ const NUEVO_PEDIDO = gql`
 
 const OBTENER_PEDIDOS = gql`
   query Query {
-    obtenerPedidos {
+    obtenerPedidosActivos {
       id
       comentario
       estado
@@ -87,11 +87,11 @@ const nuevoPedido = () => {
     const [comentario, setComentario] = useState("")
     const [CrearPedidoMutation] = useMutation(NUEVO_PEDIDO,{
         update(cache, { data: { crearPedido } }) {
-            const { obtenerPedidos } = cache.readQuery({ query: OBTENER_PEDIDOS });
+            const { obtenerPedidosActivos } = cache.readQuery({ query: OBTENER_PEDIDOS });
             cache.writeQuery({
               query: OBTENER_PEDIDOS,
               data: {
-                obtenerPedidos: [...obtenerPedidos, crearPedido]
+                obtenerPedidosActivos: [...obtenerPedidosActivos, crearPedido]
               }
             })
         }
