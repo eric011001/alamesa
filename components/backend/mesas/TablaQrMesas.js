@@ -33,7 +33,7 @@ const TablaQrMesas = () => {
   
   return(
     <div className="w-full">
-        {/*
+        {
           [...Array(secciones)].map((_,index) => (
             <>
             <div className="grid grid-cols-2 gap-4">
@@ -49,11 +49,6 @@ const TablaQrMesas = () => {
             </div>
             <div className="saltopagina" style={{backgroundColor: 'red'}}>&nbsp;</div>
             </>
-          ))*/
-          obtenerMesas.map(mesa => (
-            <div className='p-5'>
-              <QRCode key={mesa.nombre} size={200} value={`${mesa.nombre}`} />
-            </div>
           ))
         }
     </div>
