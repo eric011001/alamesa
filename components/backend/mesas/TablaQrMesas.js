@@ -53,6 +53,7 @@ const TablaQrMesas = () => {
         }
     </div>
   )
+  // sjdajs
 }
 
 export default TablaQrMesas;
