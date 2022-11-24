@@ -8,7 +8,7 @@ const Home = () => {
     <div className="flex">
     <HeadApp/>
     <Menu/>
-    <TablaEstadisticas/>
+    
     </div>
   )
 }
