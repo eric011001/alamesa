@@ -3,8 +3,8 @@ import fetch from 'node-fetch';
 import { setContext } from "apollo-link-context";
 
 const HttpLink = createHttpLink({
-  uri: 'http://localhost:4000/',
-  uri: 'http://192.168.1.70:4000',
+  //uri: 'http://localhost:4000/',
+  uri: 'https://alamesaback.onrender.com/',
   fetch
 });
 
