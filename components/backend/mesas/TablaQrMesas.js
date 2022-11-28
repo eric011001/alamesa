@@ -34,22 +34,23 @@ const TablaQrMesas = () => {
   return(
     <div className="w-full">
         {
-          [...Array(secciones)].map((_,index) => (
-            <>
-            <div className="grid grid-cols-2 gap-4">
+          
+            
+            <div className="grid grid-cols-3 gap-4">
             {
-              [...Array(8)].map((_,index2) => {
-                if(obtenerMesas[(8*index)+index2]){
-                  return(
-                    <QRCode key={obtenerMesas[(8*index)+index2].id} size={200} value={`${hostname}/nuevoPedido/${obtenerMesas[(8*index)+index2].id}`} />
-                  )
-                }
-              })
+              obtenerMesas.map(mesa => (
+                <div className='p-5 border-2 border-sky-500 rounded-lg'>
+                  <QRCode key={mesa.id} value={`${mesa.nombre}`} size={200} />
+                  <div className='text-center font-bold text-lg mt-2'>
+                    <p>{mesa.nombre}</p>
+                  </div>
+                </div>
+              ))
+                    
+                  
             }
             </div>
-            <div className="saltopagina" style={{backgroundColor: 'red'}}>&nbsp;</div>
-            </>
-          ))
+            
         }
     </div>
   )
